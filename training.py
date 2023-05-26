@@ -18,6 +18,7 @@ from torch.distributed.fsdp.wrap import transformer_auto_wrap_policy
 from torch.utils.data import DataLoader
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, Adafactor
 from transformers.models.t5.modeling_t5 import T5Block
+from transformers.models.longt5.modeling_longt5 import LongT5Block
 
 from data_loading import TextToTextDataset
 
@@ -210,14 +211,14 @@ def main(raw_args=None):
         strategy = MyFSDPStrategy(
             auto_wrap_policy=functools.partial(
                 transformer_auto_wrap_policy,
-                transformer_layer_cls={T5Block},
+                transformer_layer_cls={LongT5Block},
             ),
             mixed_precision=MixedPrecision(
                 param_dtype=torch.bfloat16,
                 reduce_dtype=torch.bfloat16,
                 buffer_dtype=torch.bfloat16,
             ),
-            activation_checkpointing=T5Block,
+            activation_checkpointing=LongT5Block,
             cpu_offload=True,
         )
 

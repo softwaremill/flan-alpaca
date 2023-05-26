@@ -51,9 +51,9 @@ class TextToTextData(BaseModel):
 
     def save(self, path: str):
         Path(path).parent.mkdir(exist_ok=True, parents=True)
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             for sample in self.samples:
-                print(sample.json(), file=f)
+                print(json.dumps(json.loads(sample.json()), ensure_ascii=False), file=f)
 
     def analyze(self, num: int = 10, tokenizer_name: str = "t5-base"):
         random.seed(num)
@@ -87,8 +87,8 @@ class AlpacaData(BaseModel):
     def save(self, path: str):
         raw = [sample.dict() for sample in self.samples]
         Path(path).parent.mkdir(exist_ok=True, parents=True)
-        with open(path, "w") as f:
-            json.dump(raw, f)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(raw, f, ensure_ascii=False)
 
     def as_data(self) -> TextToTextData:
         self.analyze()
